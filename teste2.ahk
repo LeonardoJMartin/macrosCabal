@@ -21,9 +21,112 @@ comandos.target := "Space"
 		CoordMode, Pixel, Window
 		CoordMode, Mouse, Window
 		
+		; Criando a GUI
+		Gui, Add, Text,, Selecione uma opção:
+		Gui, Add, Radio, vOption1, Arena do caos
+		Gui, Add, Radio, vOption2, Parte do mapa
+		Gui, Add, Radio, vOption3, 1ss
+		Gui, Add, Radio, vOption4, Selo
+		Gui, Add, Radio, vOption5, 2ss
+		Gui, Add, Button, gOK, OK
+
+		; Mostrando a GUI
+		Gui, Show,, Escolha uma Opção
+		Return
+
+		; Função para o botão OK
+		
+		OK:
+			; Verificando qual opção foi selecionada
+			Gui, Submit
+
+			if (Option1)
+			{
+				dgSelect := 1
+			}
+			else if (Option2)
+			{
+				dgSelect := 2
+			}
+			else if (Option3)
+			{
+				dgSelect := 3
+			}
+			else if (Option4)
+			{
+				dgSelect := 4
+			}
+			else if (Option5)
+			{
+				dgSelect := 5
+			}			
+		; Fechando a GUI
+		Gui, Destroy
+		InputBox, repeticao, Repetição, Quantas vezes você quer repetir o calabouço? ,,250,150
+		if (ErrorLevel)
+		{
+			voice.Speak("Nenhum valor foi informado, macro encerrado")
+			ExitApp
+		}
+		if (repeticao > limiteRepeticao)
+		{
+			voice.Speak("O valor máximo de repetições permitidas é" limiteRepeticao " vezes. Por favor, insira um valor menor.")
+			ExitApp
+		}
+		
+		dgSelecionada := dgSelect
+		
+		Loop, %repeticao%
+		{		
+			RolaScrollBack()
 			Buff()
 			
+			if(dgSelecionada = 1) ; ARENA DO CAOS
+			{
+				ClicaEntradaArena() 
+				ClicaListaDG(1)
+				ProcuraBtnEntrar()			
+				ProcuraBtnDesafio()
+				RolaScrollBack()
+				MoverPortaoArena()
+				ComandosArena()
+			}
 			
+			if(dgSelecionada = 2) ; PARTE DO MAPA
+			{
+				ClicaEntradaParteMapa()
+				ClicaListaDG(2)				
+				ProcuraBtnEntrar()
+				ProcuraBtnDesafio()
+			}
+			
+			if(dgSelecionada = 3) ; 1SS
+			{
+				ClicaEntrada1ss()
+				ClicaListaDG(1)				
+				ProcuraBtnEntrar()
+				ProcuraBtnDesafio()
+			}
+			
+			if(dgSelecionada = 4) ; SELO
+			{
+				ClicaEntradaSelo()
+				ClicaListaDG(1)
+				ProcuraBtnEntrar()
+				ProcuraBtnDesafio()
+			}
+			
+			if(dgSelecionada = 5) ; 2SS
+			{
+				ClicaEntrada2ss()
+				ClicaListaDG(2)
+				ProcuraBtnEntrar()
+				ProcuraBtnDesafio()
+			}
+			 	
+			ordinal := NumeroParaOrdinal(A_Index)
+			voice.Speak(ordinal . " DG finalizada")
+		}
 		ExitApp 
 	}
 	else
@@ -32,7 +135,7 @@ comandos.target := "Space"
 	}	
 	
 	ComandosArena()
-	{	
+	{						
 		SelecionarAlvo()
 		DanoArea()
 		
@@ -192,7 +295,7 @@ comandos.target := "Space"
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -203,7 +306,7 @@ comandos.target := "Space"
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -214,7 +317,7 @@ comandos.target := "Space"
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -225,7 +328,7 @@ comandos.target := "Space"
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -236,7 +339,7 @@ comandos.target := "Space"
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
