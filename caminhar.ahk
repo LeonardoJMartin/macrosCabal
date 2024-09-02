@@ -28,7 +28,7 @@ F6::
             if (!ErrorLevel) ; Se o usuário não cancelar
             {
                 ; Define o caminho completo do arquivo de log
-                logFile := "C:\Users\leona\Desktop\scripts\" . fileName . ".txt"
+                logFile := "C:\Users\leona\Desktop\scripts\caminhar\" . fileName . ".txt"
                 ; Salva o log
                 SaveLog()
             }

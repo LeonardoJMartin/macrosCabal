@@ -1,5 +1,0 @@
-Botão Direito (Arraste) - Posição Inicial: (1072, 414), Posição Final: (1406, 411)
-Tecla 1 - Posição do Mouse (Janela): (1120, 159)
-Tecla 2 - Posição do Mouse (Janela): (909, 164)
-Tecla 1 - Posição do Mouse (Janela): (963, 205)
-Tecla 2 - Posição do Mouse (Janela): (1332, 419)
