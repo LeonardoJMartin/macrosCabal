@@ -1,4 +1,6 @@
-﻿global voice := ComObjCreate("SAPI.SpVoice")
+﻿#Include %A_ScriptDir%\caminhar.ahk
+
+global voice := ComObjCreate("SAPI.SpVoice")
 global limiteRepeticao := 5
 global comandos := {}
 comandos.deslizar := "1"
@@ -79,7 +81,6 @@ comandos.target := "Space"
 		Loop, %repeticao%
 		{		
 			RolaScrollBack()
-			Buff()
 			
 			if(dgSelecionada = 1) ; ARENA DO CAOS
 			{
@@ -88,8 +89,7 @@ comandos.target := "Space"
 				ProcuraBtnEntrar()			
 				ProcuraBtnDesafio()
 				RolaScrollBack()
-				MoverPortaoArena()
-				ComandosArena()
+
 			}
 			
 			if(dgSelecionada = 2) ; PARTE DO MAPA
@@ -114,6 +114,17 @@ comandos.target := "Space"
 				ClicaListaDG(1)
 				ProcuraBtnEntrar()
 				ProcuraBtnDesafio()
+				RolaScrollBack()
+				;Selo
+				Sleep, 1000
+				MoverDeslizar(414,308, 1)
+				Sleep, 1000
+				MoverMouseClica(714, 473)
+				Send, 1
+				Sleep, 1000
+				MouseClickDrag, Right, 970, 290, 570, 274
+				Send, 1
+				Sleep, 500
 			}
 			
 			if(dgSelecionada = 5) ; 2SS
@@ -133,24 +144,6 @@ comandos.target := "Space"
 	{
 		MsgBox, O cabal NÃO está ativo!
 	}	
-	
-	ComandosArena()
-	{						
-		SelecionarAlvo()
-		DanoArea()
-		
-		Sleep, 360000 ;Espera 6 minutos
-		
-		SelecionarAlvo()
-		DanoArea()
-		
-		AtivarBM3()
-		
-		MoverCentroArena()
-		Send, 7 ;Usa aura
-		ProcuraBoss(prints.imagemSimboloFaello)
-		
-	}
 		
 	ProcuraBoss(imgSimboloBoss)
 	{	
@@ -246,11 +239,20 @@ comandos.target := "Space"
 		}
 	}
 
-	Mover(x,y, tecla)
+	MoverDeslizar(x,y, tecla)
 	{
 		MouseMove, x, y
 		Sleep, 500
 		Send, %tecla%
+		Sleep, 500
+		return
+	}
+	
+	MoverMouseClica(x,y)
+	{
+		MouseMove, x, y
+		Sleep, 500
+		Click, x, y
 		Sleep, 500
 		return
 	}
@@ -340,28 +342,6 @@ comandos.target := "Space"
 		Sleep, 300
 		Click, x, y
 		Sleep, 1300
-		return
-	}
-	
-	MoverPortaoArena()
-	{
-		Mover(1275, 196, 1)
-		Mover(977, 280, 2)
-		Mover(1410, 362, 1)
-		Sleep, 1000
-		Send, 2
-		Sleep, 500
-		Mover(455, 305, 1)
-		Mover(482, 281, 2)
-		Mover(548, 314, 1)
-		return
-	}
-	
-	MoverCentroArena()
-	{
-		Mover(290, 210, 2)
-		Mover(290, 210, 1)
-		Mover(290, 210, 2)
 		return
 	}
 	

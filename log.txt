@@ -1,0 +1,6 @@
+Tecla 1 - Posição do Mouse (Janela): (1312, 269)
+Tecla 2 - Posição do Mouse (Janela): (770, 187)
+Tecla 1 - Posição do Mouse (Janela): (448, 275)
+Tecla 2 - Posição do Mouse (Janela): (843, 208)
+Botão Direito (Arraste) - Posição Inicial: (444, 355), Posição Final: (1007, 336)
+Tecla 1 - Posição do Mouse (Janela): (744, 243)

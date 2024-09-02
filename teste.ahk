@@ -21,7 +21,10 @@ comandos.target := "Space"
 		CoordMode, Pixel, Window
 		CoordMode, Mouse, Window
 		
-			Buff()
+			Send, 1
+			MouseClickDrag, Right, 970, 290, 570, 274
+			
+			
 			
 			
 		ExitApp 
