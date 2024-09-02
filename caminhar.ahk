@@ -1,9 +1,10 @@
-﻿SendMode Input
+﻿#IfWinActive, ahk_exe CabalMain.exe
+WinActivate, ahk_exe cabalmain.exe
+SendMode Input
 SetMouseDelay, -1
-#IfWinActive, ahk_exe CabalMain.exe
 SetTitleMatchMode, 2
 toggle := false ; Estado de ativação/desativação
-logFile := "C:\Users\leona\Desktop\scripts\log.txt" ; Caminho para o arquivo de log
+global logFile ; Variável global para o caminho do arquivo de log
 
 ; Variáveis para armazenar posições do mouse
 global startX, startY
@@ -12,9 +13,26 @@ global startX, startY
 F6::
     toggle := !toggle
     if (toggle) {
+        ; Ativa a janela do jogo ao iniciar a gravação
+        WinActivate, ahk_exe CabalMain.exe
         TrayTip, Gravação, Gravação iniciada, 1 ; Mostra notificação na bandeja do sistema
     } else {
         TrayTip, Gravação, Gravação parada, 1 ; Mostra notificação na bandeja do sistema
+        
+        ; Pergunta ao usuário se deseja salvar o log
+        MsgBox, 4,, Deseja salvar o log?
+        IfMsgBox, Yes
+        {
+            ; Solicita ao usuário o nome do arquivo .txt com uma mensagem mais clara
+            InputBox, fileName, Nome do Arquivo, Por favor insira o nome do arquivo de log (sem .txt):
+            if (!ErrorLevel) ; Se o usuário não cancelar
+            {
+                ; Define o caminho completo do arquivo de log
+                logFile := "C:\Users\leona\Desktop\scripts\" . fileName . ".txt"
+                ; Salva o log
+                SaveLog()
+            }
+        }
     }
 return
 
@@ -48,29 +66,37 @@ return
     if (toggle) {
         ; Registra a posição final ao soltar o botão direito
         MouseGetPos, endX, endY
-        LogEvent("Botão Direito (Arraste)", startX, startY, endX, endY)
+        ; Verifica se houve movimento significativo antes de registrar o evento
+        if (Abs(endX - startX) > 5 || Abs(endY - startY) > 5) {
+            LogEvent("Botão Direito Arraste", startX, startY, endX, endY)
+        }
     }
 return
 
 ; Função que registra o evento
 LogEvent(event, x1 := "", y1 := "", x2 := "", y2 := "") {
-    global logFile
+    global logData
     MouseGetPos, xpos, ypos, , Win
 
-    ; Abre o arquivo para escrita (cria se não existir)
-    fileHandle := FileOpen(logFile, "a") ; Abre o arquivo no modo de anexação
-    if !IsObject(fileHandle) {
-        MsgBox, Não foi possível abrir o arquivo de log.
-        return
-    }
-    
-    ; Registra eventos normais e de arraste
-    if (event = "Botão Direito (Arraste)") {
-        fileHandle.Write(event . " - Posição Inicial: (" . x1 . ", " . y1 . "), Posição Final: (" . x2 . ", " . y2 . ")" . "`r`n")
+    ; Armazena o log em uma variável em vez de gravar diretamente no arquivo
+    if (event = "Botão Direito Arraste") {
+        logData .= event . " - Posição Inicial: (" . x1 . ", " . y1 . "), Posição Final: (" . x2 . ", " . y2 . ")" . "`r`n"
     } else {
-        fileHandle.Write(event . " - Posição do Mouse (Janela): (" . xpos . ", " . ypos . ")" . "`r`n")
+        logData .= event . " - Posição do Mouse (Janela): (" . xpos . ", " . ypos . ")" . "`r`n"
     }
-    
-    fileHandle.Close()
+}
+
+; Função para salvar o log no arquivo
+SaveLog() {
+    global logFile, logData
+    fileHandle := FileOpen(logFile, "w") ; Abre o arquivo no modo de escrita
+    if IsObject(fileHandle) {
+        fileHandle.Write(logData)
+        fileHandle.Close()
+        MsgBox, O log foi salvo com sucesso.
+    } else {
+        MsgBox, Não foi possível salvar o log.
+    }
+    logData := "" ; Limpa os dados do log após salvar
 }
 #IfWinActive
