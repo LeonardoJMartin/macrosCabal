@@ -1,6 +1,4 @@
-﻿#Include %A_ScriptDir%\caminhar.ahk
-
-global voice := ComObjCreate("SAPI.SpVoice")
+﻿global voice := ComObjCreate("SAPI.SpVoice")
 global limiteRepeticao := 5
 global comandos := {}
 comandos.deslizar := "1"
@@ -15,7 +13,7 @@ comandos.buff := "-"
 comandos.hp := "="
 comandos.pegarItem := "z"
 comandos.target := "Space"
-
+global resultadoBoss := 0
 ; Ativa a janela do jogo
 	IfWinExist, ahk_exe cabalmain.exe
 	{  
@@ -117,14 +115,31 @@ comandos.target := "Space"
 				RolaScrollBack()
 				;Selo
 				Sleep, 1000
-				MoverDeslizar(414,308, 1)
-				Sleep, 1000
-				MoverMouseClica(714, 473)
-				Send, 1
-				Sleep, 1000
-				MouseClickDrag, Right, 970, 290, 570, 274
-				Send, 1
-				Sleep, 500
+				ArrastarTela(1114, 260, 842, 281)
+				MoverDeslizar(1111, 205, 1)
+				MoverMouseClica(1078, 394)
+				MoverMouseClica(222, 730)
+				ArrastarTela(1114, 230, 873, 232)
+				MoverDeslizar(861, 96, 1)
+				MoverDeslizar(672, 173, 2)
+				MoverDeslizar(648, 180, 1)
+				MoverDeslizar(908, 123, 2)
+				MoverDeslizar(899, 126, 1)
+				ArrastarTela(1104, 175, 1270, 171)
+				MoverDeslizar(683, 230, 1)
+				ArrastarTela(951, 178, 1188, 186)
+				MoverDeslizar(878, 97, 2)
+				MoverDeslizar(1174, 96, 1)
+				ArrastarTela(1170, 103, 1271, 105)
+				MoverDeslizar(1064, 56, 2)
+				MoverDeslizar(1148, 67, 1)
+				MoverDeslizar(1443, 153, 2)
+				MoverDeslizar(1416, 152, 1)
+				MoverDeslizar(1261, 118, 2)
+				MoverMouseClica(998, 568)			
+				MataBoss()			
+				
+				
 			}
 			
 			if(dgSelecionada = 5) ; 2SS
@@ -145,22 +160,46 @@ comandos.target := "Space"
 		MsgBox, O cabal NÃO está ativo!
 	}	
 		
-	ProcuraBoss(imgSimboloBoss)
+	MataBoss()
 	{	
-		AttemptCount := 0
-		Loop
+		resultado := ProcuraImgBoss(resultadoBoss)
+		if (resultado == 1) ; Encontrou e boss ta vivo
 		{
-			Send, {Space}
-			Sleep, 500
-			Send, 3 ; Ataca
-			PegarBau()
-			Send, = ; Pota
-			Sleep, 200
-			AttemptCount++
-			if (AttemptCount > 15)  ; Limite de tentativas
+			voice.Speak("VARIAVEL RESULTADO = " resultadoBoss)
+			AtivarBM3()
+			BaterBM3()
+			Sleep, 5000
+			resultadoBoss := 1
+			MataBoss()
+		}
+		else if (resultado == 0) ; Ainda não encontrou
+		{
+			voice.Speak("VARIAVEL RESULTADO = " resultadoBoss)
+			SelecionarAlvo()
+			MataBoss()
+		}
+		else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
+		{
+			resultadoBoss := 0
+			voice.Speak("O bóss foi eliminado")
+			return
+		}
+	}	
+	
+	ProcuraImgBoss(jaEncontrou)
+	{	
+		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\iconeboss.png
+		if (ErrorLevel = 0)
+		{
+			return 1
+		}
+		else if (ErrorLevel = 1)
+		{
+			if (jaEncontrou == 1) ; Já encontrou antes, mas agora não
 			{
-				break
+				return 2
 			}
+			return 0
 		}
 	}
 	
@@ -195,11 +234,9 @@ comandos.target := "Space"
 		z := comandos.atkArea3
 		
 		Send, %x%
-		Sleep, 2300
+		Sleep, 3100
 		Send, %y%
-		Sleep, 2600
-		Send, %z%
-		Sleep, 2500
+		Sleep, 2300
 		return
 	}
 	
@@ -216,11 +253,16 @@ comandos.target := "Space"
 	
 	AtivarBM3()
 	{
-		Send, {F3} ;Vai para aba 3
-		Sleep, 500
-		Send, 6
-		Sleep, 500
-		return
+		x := comandos.bm3Invoca
+		Send, %x%
+		Sleep, 1200
+	}
+	
+	BaterBM3()
+	{
+		x := comandos.bm3Ataca
+		Send, %x%
+		Sleep, 1400
 	}
 	
 	RolaScrollBack()
@@ -254,6 +296,13 @@ comandos.target := "Space"
 		Sleep, 500
 		Click, x, y
 		Sleep, 500
+		return
+	}
+	
+	ArrastarTela(x1, y1, x2, y2)
+	{
+		MouseClickDrag, Right, x1, y1, x2, y2
+		Sleep, 1000
 		return
 	}
 	
@@ -431,3 +480,4 @@ comandos.target := "Space"
 		ordinais := ["primeira", "segunda", "terceira", "quarta", "quinta", "sexta", "sétima", "oitava", "nona", "décima"]
 		return ordinais[num]
 	}
+	

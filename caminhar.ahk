@@ -14,7 +14,6 @@ F6::
     toggle := !toggle
     if (toggle) {
         ; Ativa a janela do jogo ao iniciar a gravação
-        WinActivate, ahk_exe CabalMain.exe
         TrayTip, Gravação, Gravação iniciada, 1 ; Mostra notificação na bandeja do sistema
     } else {
         TrayTip, Gravação, Gravação parada, 1 ; Mostra notificação na bandeja do sistema
@@ -43,14 +42,17 @@ return
         ; Código para registrar o evento
         event := ""
         if (A_ThisHotkey = "~LButton")
-            event := "Botão Esquerdo"
-        else if (A_ThisHotkey = "~1")
-            event := "Tecla 1"
-        else if (A_ThisHotkey = "~2")
-            event := "Tecla 2"
-
+            event := "MoverMouseClica"
+        else if (A_ThisHotkey = "~1"){
+            event := "MoverDeslizar"
+            tecla := 1
+		}
+        else if (A_ThisHotkey = "~2"){
+            event := "MoverDeslizar"
+            tecla := 2
+		}
         if (event != "") {
-            LogEvent(event)
+            LogEvent(event, tecla)
         }
     }
 return
@@ -68,21 +70,23 @@ return
         MouseGetPos, endX, endY
         ; Verifica se houve movimento significativo antes de registrar o evento
         if (Abs(endX - startX) > 5 || Abs(endY - startY) > 5) {
-            LogEvent("Botão Direito Arraste", startX, startY, endX, endY)
+            LogEvent("ArrastarTela", startX, startY, endX, endY)
         }
     }
 return
 
 ; Função que registra o evento
-LogEvent(event, x1 := "", y1 := "", x2 := "", y2 := "") {
+LogEvent(event, param1 := "", param2 := "", param3 := "", param4 := "") {
     global logData
     MouseGetPos, xpos, ypos, , Win
 
-    ; Armazena o log em uma variável em vez de gravar diretamente no arquivo
-    if (event = "Botão Direito Arraste") {
-        logData .= event . " - Posição Inicial: (" . x1 . ", " . y1 . "), Posição Final: (" . x2 . ", " . y2 . ")" . "`r`n"
-    } else {
-        logData .= event . " - Posição do Mouse (Janela): (" . xpos . ", " . ypos . ")" . "`r`n"
+    ; Armazena o log em uma variável no novo formato
+    if (event = "ArrastarTela") {
+        logData .= event . "(" . param1 . ", " . param2 . ", " . param3 . ", " . param4 . ")" . "`r`n"
+    } else if (event = "MoverDeslizar") {
+        logData .= event . "(" . xpos . ", " . ypos . ", " . param1 . ")" . "`r`n"
+    } else if (event = "MoverMouseClica") {
+        logData .= event . "(" . xpos . ", " . ypos . ")" . "`r`n"
     }
 }
 

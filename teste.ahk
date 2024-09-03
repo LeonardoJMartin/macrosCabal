@@ -11,8 +11,8 @@ comandos.bm3Invoca := "9"
 comandos.aura := "0"
 comandos.buff := "-"
 comandos.hp := "="
-comandos.pegarItem := "z"
-comandos.target := "Space"
+comandos.pegarItem := "Space"
+comandos.target := "z"
 
 ; Ativa a janela do jogo
 	IfWinExist, ahk_exe cabalmain.exe
@@ -21,8 +21,8 @@ comandos.target := "Space"
 		CoordMode, Pixel, Window
 		CoordMode, Mouse, Window
 		
-			Send, 1
-			MouseClickDrag, Right, 970, 290, 570, 274
+		MataBoss()
+			
 			
 			
 			
@@ -33,41 +33,45 @@ comandos.target := "Space"
 	{
 		MsgBox, O cabal NÃO está ativo!
 	}	
-	
-	ComandosArena()
+		
+	MataBoss()
 	{	
-		SelecionarAlvo()
-		DanoArea()
-		
-		Sleep, 360000 ;Espera 6 minutos
-		
-		SelecionarAlvo()
-		DanoArea()
-		
-		AtivarBM3()
-		
-		MoverCentroArena()
-		Send, 7 ;Usa aura
-		ProcuraBoss(prints.imagemSimboloFaello)
-		
-	}
-		
-	ProcuraBoss(imgSimboloBoss)
-	{	
-		AttemptCount := 0
-		Loop
+		resultado := ProcuraImgBoss(resultadoBoss)
+		if (resultado == 1) ; Encontrou e boss ta vivo
 		{
-			Send, {Space}
-			Sleep, 500
-			Send, 3 ; Ataca
-			PegarBau()
-			Send, = ; Pota
-			Sleep, 200
-			AttemptCount++
-			if (AttemptCount > 15)  ; Limite de tentativas
+			AtivarBM3()
+			BaterBM3()
+			Sleep, 5000
+			resultadoBoss := 1
+			MataBoss()
+		}
+		else if (resultado == 0) ; Ainda não encontrou
+		{
+			SelecionarAlvo()
+			MataBoss()
+		}
+		else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
+		{
+			resultadoBoss := 0
+			voice.Speak("O bóss foi eliminado")
+			return
+		}
+	}	
+	
+	ProcuraImgBoss(jaEncontrou)
+	{	
+		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\iconeboss.png
+		if (ErrorLevel = 0)
+		{
+			return 1
+		}
+		else if (ErrorLevel = 1)
+		{
+			if (jaEncontrou == 1) ; Já encontrou antes, mas agora não
 			{
-				break
+				return 2
 			}
+			return 0
 		}
 	}
 	
@@ -123,11 +127,16 @@ comandos.target := "Space"
 	
 	AtivarBM3()
 	{
-		Send, {F3} ;Vai para aba 3
-		Sleep, 500
-		Send, 6
-		Sleep, 500
-		return
+		x := comandos.bm3Invoca
+		Send, %x%
+		Sleep, 1200
+	}
+	
+	BaterBM3()
+	{
+		x := comandos.bm3Ataca
+		Send, %x%
+		Sleep, 1400
 	}
 	
 	RolaScrollBack()
@@ -240,28 +249,6 @@ comandos.target := "Space"
 		Sleep, 300
 		Click, x, y
 		Sleep, 1000
-		return
-	}
-	
-	MoverPortaoArena()
-	{
-		Mover(1275, 196, 1)
-		Mover(977, 280, 2)
-		Mover(1410, 362, 1)
-		Sleep, 1000
-		Send, 2
-		Sleep, 500
-		Mover(455, 305, 1)
-		Mover(482, 281, 2)
-		Mover(548, 314, 1)
-		return
-	}
-	
-	MoverCentroArena()
-	{
-		Mover(290, 210, 2)
-		Mover(290, 210, 1)
-		Mover(290, 210, 2)
 		return
 	}
 	
