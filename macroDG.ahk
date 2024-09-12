@@ -13,7 +13,11 @@ comandos.buff := "-"
 comandos.hp := "="
 comandos.pegarItem := "z"
 comandos.target := "Space"
-global resultadoBoss := 0
+
+BOSS_ENCONTRADO := 1
+BOSS_NAO_ENCONTRADO := 0
+BOSS_MORTO := 2
+
 ; Ativa a janela do jogo
 	IfWinExist, ahk_exe cabalmain.exe
 	{  
@@ -115,30 +119,32 @@ global resultadoBoss := 0
 				RolaScrollBack()
 				;Selo
 				Sleep, 1000
-				ArrastarTela(1114, 260, 842, 281)
-				MoverDeslizar(1111, 205, 1)
-				MoverMouseClica(1078, 394)
-				MoverMouseClica(222, 730)
-				ArrastarTela(1114, 230, 873, 232)
-				MoverDeslizar(861, 96, 1)
-				MoverDeslizar(672, 173, 2)
-				MoverDeslizar(648, 180, 1)
-				MoverDeslizar(908, 123, 2)
-				MoverDeslizar(899, 126, 1)
-				ArrastarTela(1104, 175, 1270, 171)
-				MoverDeslizar(683, 230, 1)
-				ArrastarTela(951, 178, 1188, 186)
-				MoverDeslizar(878, 97, 2)
-				MoverDeslizar(1174, 96, 1)
-				ArrastarTela(1170, 103, 1271, 105)
-				MoverDeslizar(1064, 56, 2)
-				MoverDeslizar(1148, 67, 1)
-				MoverDeslizar(1443, 153, 2)
-				MoverDeslizar(1416, 152, 1)
-				MoverDeslizar(1261, 118, 2)
-				MoverMouseClica(998, 568)			
+				ArrastarTela(1066, 297, 858, 330)
+				MoverDeslizar(957, 182, 1)
+				MoverMouseClica(956, 347)
+				MoverMouseClica(182, 753)
+				ArrastarTela(1138, 281, 822, 261)
+				MoverDeslizar(861, 115, 1)
+				MoverDeslizar(791, 137, 2)
+				MoverDeslizar(704, 196, 1)
+				MoverDeslizar(965, 151, 2)
+				MoverDeslizar(980, 148, 1)
+				MoverDeslizar(1228, 225, 2)
+				ArrastarTela(1293, 255, 1501, 252)
+				MoverDeslizar(1074, 155, 1)
+				ArrastarTela(1073, 154, 1306, 169)
+				MoverDeslizar(1160, 125, 2)
+				ArrastarTela(1217, 130, 1260, 125)
+				MoverDeslizar(1290, 113, 1)
+				MoverDeslizar(1257, 96, 2)
+				MoverDeslizar(1165, 122, 1)
+				MoverDeslizar(1557, 313, 2)
+				MoverDeslizar(1450, 209, 1)
+				MoverDeslizar(1307, 236, 1)
+				MoverDeslizar(1213, 325, 2)	
+				SelecionarAlvo()				
 				MataBoss()			
-				
+
 				
 			}
 			
@@ -161,45 +167,45 @@ global resultadoBoss := 0
 	}	
 		
 	MataBoss()
-	{	
-		resultado := ProcuraImgBoss(resultadoBoss)
-		if (resultado == 1) ; Encontrou e boss ta vivo
+	{
+		loop
 		{
-			voice.Speak("VARIAVEL RESULTADO = " resultadoBoss)
-			AtivarBM3()
-			BaterBM3()
-			Sleep, 5000
-			resultadoBoss := 1
-			MataBoss()
-		}
-		else if (resultado == 0) ; Ainda não encontrou
-		{
-			voice.Speak("VARIAVEL RESULTADO = " resultadoBoss)
-			SelecionarAlvo()
-			MataBoss()
-		}
-		else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
-		{
-			resultadoBoss := 0
-			voice.Speak("O bóss foi eliminado")
-			return
+			resultado := ProcuraImgBoss(BOSS_NAO_ENCONTRADO)
+			
+			if (resultado == BOSS_ENCONTRADO) ; Encontrou e boss está vivo
+			{
+				AtivarBM3()
+				BaterBM3()
+				Sleep, 5000
+				resultadoBoss := BOSS_ENCONTRADO
+			}
+			else if (resultado == BOSS_NAO_ENCONTRADO) ; Ainda não encontrou
+			{
+				SelecionarAlvo()
+			}
+			else if (resultado == BOSS_MORTO) ; Já encontrou, mas agora não encontrou (matou)
+			{
+				resultadoBoss := BOSS_NAO_ENCONTRADO
+				voice.Speak("O boss foi eliminado")
+				break
+			}
 		}
 	}	
-	
+
 	ProcuraImgBoss(jaEncontrou)
-	{	
+	{
 		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\iconeboss.png
-		if (ErrorLevel = 0)
+		if (ErrorLevel == 0)
 		{
-			return 1
+			return BOSS_ENCONTRADO
 		}
-		else if (ErrorLevel = 1)
+		else if (ErrorLevel == 1)
 		{
-			if (jaEncontrou == 1) ; Já encontrou antes, mas agora não
+			if (jaEncontrou == BOSS_ENCONTRADO) ; Já encontrou antes, mas agora não
 			{
-				return 2
+				return BOSS_MORTO
 			}
-			return 0
+			return BOSS_NAO_ENCONTRADO
 		}
 	}
 	
@@ -284,25 +290,25 @@ global resultadoBoss := 0
 	MoverDeslizar(x,y, tecla)
 	{
 		MouseMove, x, y
-		Sleep, 500
+		Sleep, 300
 		Send, %tecla%
-		Sleep, 500
+		Sleep, 300
 		return
 	}
 	
 	MoverMouseClica(x,y)
 	{
 		MouseMove, x, y
-		Sleep, 500
+		Sleep, 300
 		Click, x, y
-		Sleep, 500
+		Sleep, 300
 		return
 	}
 	
 	ArrastarTela(x1, y1, x2, y2)
 	{
 		MouseClickDrag, Right, x1, y1, x2, y2
-		Sleep, 1000
+		Sleep, 500
 		return
 	}
 	

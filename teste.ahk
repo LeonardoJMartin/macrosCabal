@@ -14,6 +14,10 @@ comandos.hp := "="
 comandos.pegarItem := "Space"
 comandos.target := "z"
 
+BOSS_ENCONTRADO := 1
+BOSS_NAO_ENCONTRADO := 0
+BOSS_MORTO := 2
+
 ; Ativa a janela do jogo
 	IfWinExist, ahk_exe cabalmain.exe
 	{  
@@ -21,12 +25,19 @@ comandos.target := "z"
 		CoordMode, Pixel, Window
 		CoordMode, Mouse, Window
 		
-		MataBoss()
-			
-			
-			
-			
-			
+		MoverDeslizar(970, 125, 1)
+		MoverDeslizar(970, 125, 2)
+		MoverDeslizar(970, 125, 1)
+		MoverDeslizar(970, 125, 2)
+		MoverDeslizar(970, 125, 1)
+		MoverDeslizar(970, 125, 2)
+		MoverDeslizar(970, 125, 1)
+		MoverDeslizar(970, 125, 2)
+		MoverDeslizar(970, 125, 1)
+		MoverDeslizar(970, 125, 2)
+		MoverDeslizar(970, 125, 1)
+		MoverDeslizar(970, 125, 2)
+		MoverDeslizar(970, 125, 1)
 		ExitApp 
 	}
 	else
@@ -35,32 +46,75 @@ comandos.target := "z"
 	}	
 		
 	MataBoss()
+	{
+		loop
+		{
+			resultado := ProcuraImgBoss(resultadoBoss)
+			
+			if (resultado == BOSS_ENCONTRADO) ; Encontrou e boss está vivo
+			{
+				AtivarBM3()
+				BaterBM3()
+				Sleep, 5000
+				resultadoBoss := BOSS_ENCONTRADO
+			}
+			else if (resultado == BOSS_NAO_ENCONTRADO) ; Ainda não encontrou
+			{
+				SelecionarAlvo()
+			}
+			else if (resultado == BOSS_MORTO) ; Já encontrou, mas agora não encontrou (matou)
+			{
+				resultadoBoss := BOSS_NAO_ENCONTRADO
+				voice.Speak("O boss foi eliminado")
+				break
+			}
+		}
+	}	
+
+	ProcuraImgBoss(jaEncontrou)
+	{
+		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\iconeboss.png
+		if (ErrorLevel == 0)
+		{
+			return BOSS_ENCONTRADO
+		}
+		else if (ErrorLevel == 1)
+		{
+			if (jaEncontrou == BOSS_ENCONTRADO) ; Já encontrou antes, mas agora não
+			{
+				return BOSS_MORTO
+			}
+			return BOSS_NAO_ENCONTRADO
+		}
+	}
+	
+	MataMobSemIcone()
 	{	
-		resultado := ProcuraImgBoss(resultadoBoss)
+		resultado := ProcuraImgSemIcone(resultadoBoss) ; Variavel global
 		if (resultado == 1) ; Encontrou e boss ta vivo
 		{
 			AtivarBM3()
 			BaterBM3()
 			Sleep, 5000
 			resultadoBoss := 1
-			MataBoss()
+			MataMobSemIcone()
 		}
 		else if (resultado == 0) ; Ainda não encontrou
 		{
 			SelecionarAlvo()
-			MataBoss()
+			MataMobSemIcone()
 		}
 		else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
 		{
-			resultadoBoss := 0
-			voice.Speak("O bóss foi eliminado")
+			resultadoBoss := 0 ; Resetando valor da variavel global
+			voice.Speak("O alvo foi eliminado")
 			return
 		}
-	}	
+	}
 	
-	ProcuraImgBoss(jaEncontrou)
-	{	
-		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\iconeboss.png
+	ProcuraImgSemIcone(jaEncontrou)
+	{
+		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\semiconemob.png
 		if (ErrorLevel = 0)
 		{
 			return 1
@@ -155,11 +209,27 @@ comandos.target := "z"
 		}
 	}
 
-	Mover(x,y, tecla)
+	MoverDeslizar(x,y, tecla)
 	{
 		MouseMove, x, y
 		Sleep, 500
 		Send, %tecla%
+		Sleep, 300
+		return
+	}
+	
+	MoverMouseClica(x,y)
+	{
+		MouseMove, x, y
+		Sleep, 500
+		Click, x, y
+		Sleep, 500
+		return
+	}
+	
+	ArrastarTela(x1, y1, x2, y2)
+	{
+		MouseClickDrag, Right, x1, y1, x2, y2
 		Sleep, 500
 		return
 	}
