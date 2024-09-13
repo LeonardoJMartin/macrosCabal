@@ -2,21 +2,32 @@
 global limiteRepeticao := 5
 global comandos := {}
 comandos.deslizar := "1"
-comandos.teleporte := "2"
+comandos.recuar := "2"
 comandos.atkArea1 := "3"
 comandos.atkArea2 := "4"
 comandos.atkArea3 := "5"
-comandos.bm3Ataca := "8"
-comandos.bm3Invoca := "9"
-comandos.aura := "0"
+comandos.bmAtaca := "6"
+comandos.bm3Invoca := "7"
+comandos.bm2Invoca := "8"
+comandos.aura := "9"
 comandos.buff := "-"
 comandos.hp := "="
-comandos.pegarItem := "z"
-comandos.target := "Space"
+comandos.pegarItem := "Space"
+comandos.target := "z"
+
+; Defina o diretório base usando o diretório do script
+baseDir := A_ScriptDir . "\imagens"
+
+global imagem := {}
+imagem.iconeBoss := baseDir . "\iconeboss.png"
+imagem.icone := baseDir . "\iconemob.png"
+imagem.semIconeMob := baseDir . "\semiconemob.png"
 
 BOSS_ENCONTRADO := 1
 BOSS_NAO_ENCONTRADO := 0
 BOSS_MORTO := 2
+
+global resultadoBoss
 
 ; Ativa a janela do jogo
 	IfWinExist, ahk_exe cabalmain.exe
@@ -100,6 +111,7 @@ BOSS_MORTO := 2
 				ClicaListaDG(2)				
 				ProcuraBtnEntrar()
 				ProcuraBtnDesafio()
+				RolaScrollBack()
 			}
 			
 			if(dgSelecionada = 3) ; 1SS
@@ -108,6 +120,7 @@ BOSS_MORTO := 2
 				ClicaListaDG(1)				
 				ProcuraBtnEntrar()
 				ProcuraBtnDesafio()
+				RolaScrollBack()
 			}
 			
 			if(dgSelecionada = 4) ; SELO
@@ -117,34 +130,8 @@ BOSS_MORTO := 2
 				ProcuraBtnEntrar()
 				ProcuraBtnDesafio()
 				RolaScrollBack()
-				;Selo
-				Sleep, 1000
-				ArrastarTela(1066, 297, 858, 330)
-				MoverDeslizar(957, 182, 1)
-				MoverMouseClica(956, 347)
-				MoverMouseClica(182, 753)
-				ArrastarTela(1138, 281, 822, 261)
-				MoverDeslizar(861, 115, 1)
-				MoverDeslizar(791, 137, 2)
-				MoverDeslizar(704, 196, 1)
-				MoverDeslizar(965, 151, 2)
-				MoverDeslizar(980, 148, 1)
-				MoverDeslizar(1228, 225, 2)
-				ArrastarTela(1293, 255, 1501, 252)
-				MoverDeslizar(1074, 155, 1)
-				ArrastarTela(1073, 154, 1306, 169)
-				MoverDeslizar(1160, 125, 2)
-				ArrastarTela(1217, 130, 1260, 125)
-				MoverDeslizar(1290, 113, 1)
-				MoverDeslizar(1257, 96, 2)
-				MoverDeslizar(1165, 122, 1)
-				MoverDeslizar(1557, 313, 2)
-				MoverDeslizar(1450, 209, 1)
-				MoverDeslizar(1307, 236, 1)
-				MoverDeslizar(1213, 325, 2)	
-				SelecionarAlvo()				
-				MataBoss()			
-
+				Sleep, 300
+				DGSelo()				
 				
 			}
 			
@@ -154,6 +141,7 @@ BOSS_MORTO := 2
 				ClicaListaDG(2)
 				ProcuraBtnEntrar()
 				ProcuraBtnDesafio()
+				RolaScrollBack()
 			}
 			 	
 			ordinal := NumeroParaOrdinal(A_Index)
@@ -165,47 +153,139 @@ BOSS_MORTO := 2
 	{
 		MsgBox, O cabal NÃO está ativo!
 	}	
+	
+	DGSelo()
+	{
+		MoverDeslizar(453, 372, 1)
+		MoverMouseClica(793, 468)
+		MoverMouseClica(211, 737)
+		ArrastarTela(1089, 302, 531, 311)
+		MoverDeslizar(988, 144, 1)
+		MoverDeslizar(834, 149, 2)
+		MoverDeslizar(741, 191, 1)
+		MoverDeslizar(1053, 167, 2)
+		MoverDeslizar(1061, 165, 1)
+		MoverDeslizar(1319, 233, 2)
+		MoverDeslizar(1457, 384, 1)
+		ArrastarTela(1243, 404, 1661, 436)
+		MoverDeslizar(1360, 112, 2)
+		MoverDeslizar(1495, 154, 1)
+		MoverDeslizar(1629, 172, 2)
+		MoverDeslizar(1756, 222, 1)
+		MoverDeslizar(1811, 429, 2)
+		MoverDeslizar(1749, 332, 1)
+				
+		VerificaStatusAlvo( imagem.iconeBoss, 1)	
 		
-	MataBoss()
+		MoverDeslizar(1264, 245, 1)
+		MoverMouseClica(1094, 432)
+		MoverMouseClica(129, 754)
+		MoverMouseClica(118, 756)
+		MoverMouseClica(154, 752)
+		MoverMouseClica(172, 749)
+		MoverMouseClica(181, 725)
+		MoverMouseClica(202, 730)
+		MoverMouseClica(221, 731)
+		MoverMouseClica(231, 744)
+		MoverMouseClica(206, 746)
+		MoverMouseClica(212, 740)
+		MoverMouseClica(211, 741)
+		MoverMouseClica(208, 714)
+		MoverDeslizar(808, 158, 1)
+		MoverDeslizar(662, 168, 2)
+		MoverDeslizar(664, 168, 1)
+		MoverDeslizar(355, 488, 2)
+		MoverDeslizar(235, 746, 1)
+		MoverDeslizar(198, 867, 2)
+		MoverDeslizar(172, 914, 1)
+		MoverDeslizar(457, 428, 2)
+		MoverDeslizar(743, 210, 1)
+		MoverDeslizar(1527, 253, 2)
+		MoverDeslizar(1543, 230, 1)
+		MoverDeslizar(1555, 232, 2)
+		MoverDeslizar(1555, 232, 1)
+		MoverDeslizar(1554, 479, 2)
+		MoverDeslizar(1430, 332, 1)
+		MoverDeslizar(646, 199, 2)
+		MoverDeslizar(769, 121, 1)
+		MoverDeslizar(767, 155, 2)
+		MoverDeslizar(680, 218, 1)
+		MoverDeslizar(597, 820, 2)
+		MoverDeslizar(966, 913, 1)
+		MoverDeslizar(977, 925, 2)
+		MoverDeslizar(923, 913, 1)
+		MoverDeslizar(795, 916, 2)
+		MoverDeslizar(581, 809, 1)
+		MoverDeslizar(690, 265, 2)
+		MoverDeslizar(711, 193, 1)
+		MoverDeslizar(816, 207, 2)
+		MoverDeslizar(1025, 231, 1)
+		
+		VerificaStatusAlvo( imagem.iconeBoss, 3)
+		VerificaStatusAlvo( imagem.iconeBoss, 3)
+		
+	}
+	
+	Atacar(tipoAtaque)
+	{
+		if(tipoAtaque == 1)
+		{
+			voice.Speak("Bater com dano em area")
+			DanoArea()		
+		}
+		else if (tipoAtaque == 3)
+		{
+			voice.Speak("Bater com BM3")
+			AtivarBM3()
+			BaterBM()
+		}
+		else if (tipoAtaque == 2)
+		{
+			voice.Speak("Bater com BM2")
+			AtivarBM2()
+			BaterBM()
+		}
+	}
+	
+	VerificaStatusAlvo(imagemAlvo, tipoAtaque)
 	{
 		loop
 		{
-			resultado := ProcuraImgBoss(BOSS_NAO_ENCONTRADO)
-			
-			if (resultado == BOSS_ENCONTRADO) ; Encontrou e boss está vivo
+			resultado := ProcuraAlvo(imagemAlvo, resultadoBoss)
+			if (resultado == 1)  ; Encontrou e alvo está vivo
 			{
-				AtivarBM3()
-				BaterBM3()
-				Sleep, 5000
-				resultadoBoss := BOSS_ENCONTRADO
+				resultadoBoss := 1
+				voice.Speak("Alvo encontrado")
+				Atacar(tipoAtaque)
 			}
-			else if (resultado == BOSS_NAO_ENCONTRADO) ; Ainda não encontrou
+			else if (resultado == 0)  ; Ainda não encontrou
 			{
+				voice.Speak("Alvo não encontrado")
 				SelecionarAlvo()
 			}
-			else if (resultado == BOSS_MORTO) ; Já encontrou, mas agora não encontrou (matou)
+			else if (resultado == 2)  ; Já encontrou, mas agora não encontrou (matou)
 			{
-				resultadoBoss := BOSS_NAO_ENCONTRADO
-				voice.Speak("O boss foi eliminado")
+				resultadoBoss := 0  ; Resetando valor da variável global
+				voice.Speak("O alvo foi eliminado")
 				break
 			}
 		}
-	}	
+	}
 
-	ProcuraImgBoss(jaEncontrou)
+	ProcuraAlvo(imagemAlvo, jaEncontrou)
 	{
-		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\iconeboss.png
-		if (ErrorLevel == 0)
+		ImageSearch, FoundX, FoundY, 764, 48, 796, 78, % imagemAlvo
+		if (ErrorLevel = 0)
 		{
-			return BOSS_ENCONTRADO
+			return 1
 		}
-		else if (ErrorLevel == 1)
+		else if (ErrorLevel = 1)
 		{
-			if (jaEncontrou == BOSS_ENCONTRADO) ; Já encontrou antes, mas agora não
+			if (jaEncontrou == 1)  ; Já encontrou antes, mas agora não
 			{
-				return BOSS_MORTO
+				return 2
 			}
-			return BOSS_NAO_ENCONTRADO
+			return 0
 		}
 	}
 	
@@ -214,7 +294,7 @@ BOSS_MORTO := 2
 		x := comandos.pegarItem	
 		Loop, 10
 		{
-			Send, %x%
+			Send, { %x% }
 			Sleep, 300
 		}
 	}
@@ -222,7 +302,7 @@ BOSS_MORTO := 2
 	SelecionarAlvo()
 	{
 		x := comandos.target
-		Send, %x%
+		Send, { %x% }
 		Sleep, 300
 	}
 	
@@ -243,6 +323,8 @@ BOSS_MORTO := 2
 		Sleep, 3100
 		Send, %y%
 		Sleep, 2300
+		Send, %z%
+		Sleep, 2500
 		return
 	}
 	
@@ -257,23 +339,30 @@ BOSS_MORTO := 2
 		return
 	}
 	
+	AtivarBM2()
+	{
+		x := comandos.bm2Invoca
+		Send, %x%
+		Sleep, 1000
+	}
+	
 	AtivarBM3()
 	{
 		x := comandos.bm3Invoca
 		Send, %x%
-		Sleep, 1200
+		Sleep, 1000
 	}
 	
-	BaterBM3()
+	BaterBM()
 	{
-		x := comandos.bm3Ataca
+		x := comandos.bmAtaca
 		Send, %x%
-		Sleep, 1400
+		Sleep, 500
 	}
 	
 	RolaScrollBack()
 	{
-		ScrollDown(20)
+		ScrollDown(10)
 		Sleep, 300
 		return
 	}
@@ -292,7 +381,7 @@ BOSS_MORTO := 2
 		MouseMove, x, y
 		Sleep, 300
 		Send, %tecla%
-		Sleep, 300
+		Sleep, 500
 		return
 	}
 	
@@ -308,7 +397,7 @@ BOSS_MORTO := 2
 	ArrastarTela(x1, y1, x2, y2)
 	{
 		MouseClickDrag, Right, x1, y1, x2, y2
-		Sleep, 500
+		Sleep, 300
 		return
 	}
 	

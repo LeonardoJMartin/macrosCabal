@@ -6,6 +6,9 @@ SetTitleMatchMode, 2
 toggle := false ; Estado de ativação/desativação
 global logFile ; Variável global para o caminho do arquivo de log
 
+; Defina o diretório base usando o diretório do script
+baseDir := A_ScriptDir . "\logs\"
+
 ; Variáveis para armazenar posições do mouse
 global startX, startY
 
@@ -27,7 +30,7 @@ F6::
             if (!ErrorLevel) ; Se o usuário não cancelar
             {
                 ; Define o caminho completo do arquivo de log
-                logFile := "C:\Users\leona\Desktop\scripts\caminhar\" . fileName . ".txt"
+                logFile := baseDir . fileName . ".txt"
                 ; Salva o log
                 SaveLog()
             }

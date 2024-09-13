@@ -2,21 +2,27 @@
 global limiteRepeticao := 5
 global comandos := {}
 comandos.deslizar := "1"
-comandos.teleporte := "2"
+comandos.recuar := "2"
 comandos.atkArea1 := "3"
 comandos.atkArea2 := "4"
 comandos.atkArea3 := "5"
-comandos.bm3Ataca := "8"
-comandos.bm3Invoca := "9"
-comandos.aura := "0"
+comandos.bmAtaca := "6"
+comandos.bm3Invoca := "7"
+comandos.bm2Invoca := "8"
+comandos.aura := "9"
 comandos.buff := "-"
 comandos.hp := "="
 comandos.pegarItem := "Space"
 comandos.target := "z"
 
-BOSS_ENCONTRADO := 1
-BOSS_NAO_ENCONTRADO := 0
-BOSS_MORTO := 2
+; Defina o diretório base usando o diretório do script
+baseDir := A_ScriptDir . "\imagens"
+
+global imagem := {}
+imagem.iconeBoss := baseDir . "\iconeboss.png"
+imagem.iconeMob := baseDir . "\iconemob.png"
+imagem.semIconeMob := baseDir . "\iconemobsemicone.png"
+
 
 ; Ativa a janela do jogo
 	IfWinExist, ahk_exe cabalmain.exe
@@ -24,97 +30,106 @@ BOSS_MORTO := 2
 		WinActivate, ahk_exe cabalmain.exe
 		CoordMode, Pixel, Window
 		CoordMode, Mouse, Window
-		
-		MoverDeslizar(970, 125, 1)
-		MoverDeslizar(970, 125, 2)
-		MoverDeslizar(970, 125, 1)
-		MoverDeslizar(970, 125, 2)
-		MoverDeslizar(970, 125, 1)
-		MoverDeslizar(970, 125, 2)
-		MoverDeslizar(970, 125, 1)
-		MoverDeslizar(970, 125, 2)
-		MoverDeslizar(970, 125, 1)
-		MoverDeslizar(970, 125, 2)
-		MoverDeslizar(970, 125, 1)
-		MoverDeslizar(970, 125, 2)
-		MoverDeslizar(970, 125, 1)
+		MataMobSemIcone(3)
+		MataMobSemIcone(3)
 		ExitApp 
 	}
 	else
 	{
 		MsgBox, O cabal NÃO está ativo!
 	}	
-		
-	MataBoss()
+	
+	Atacar(tipoAtaque)
 	{
+		if(tipoAtaque == 1)
+		{
+			voice.Speak("Bater com dano em area")
+			DanoArea()		
+		}
+		else if (tipoAtaque == 3)
+		{
+			voice.Speak("Bater com BM3")
+			AtivarBM3()
+			BaterBM()
+		}
+		else if (tipoAtaque == 2)
+		{
+			voice.Speak("Bater com BM2")
+			AtivarBM2()
+			BaterBM()
+		}
+	}
+	
+	MataBoss(tipoAtaque)
+	{	
 		loop
 		{
-			resultado := ProcuraImgBoss(resultadoBoss)
-			
-			if (resultado == BOSS_ENCONTRADO) ; Encontrou e boss está vivo
+			resultado := ProcuraBossIcone(resultadoBoss) ; Variavel global
+			if (resultado == 1) ; Encontrou e boss ta vivo
 			{
-				AtivarBM3()
-				BaterBM3()
-				Sleep, 5000
-				resultadoBoss := BOSS_ENCONTRADO
+				resultadoBoss := 1
+				voice.Speak("Boss encontrado")
+				Atacar(tipoAtaque)
 			}
-			else if (resultado == BOSS_NAO_ENCONTRADO) ; Ainda não encontrou
+			else if (resultado == 0) ; Ainda não encontrou
 			{
+				voice.Speak("Boss não encontrado")
 				SelecionarAlvo()
 			}
-			else if (resultado == BOSS_MORTO) ; Já encontrou, mas agora não encontrou (matou)
+			else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
 			{
-				resultadoBoss := BOSS_NAO_ENCONTRADO
-				voice.Speak("O boss foi eliminado")
+				resultadoBoss := 0 ; Resetando valor da variavel global
+				voice.Speak("O alvo foi eliminado")
 				break
 			}
 		}
-	}	
-
-	ProcuraImgBoss(jaEncontrou)
+	}
+	
+	ProcuraBossIcone(jaEncontrou)
 	{
-		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\iconeboss.png
-		if (ErrorLevel == 0)
+		ImageSearch, FoundX, FoundY, 764, 48, 796, 78, % imagem.iconeBoss
+		if (ErrorLevel = 0)
 		{
-			return BOSS_ENCONTRADO
+			return 1
 		}
-		else if (ErrorLevel == 1)
+		else if (ErrorLevel = 1)
 		{
-			if (jaEncontrou == BOSS_ENCONTRADO) ; Já encontrou antes, mas agora não
+			if (jaEncontrou == 1) ; Já encontrou antes, mas agora não
 			{
-				return BOSS_MORTO
+				return 2
 			}
-			return BOSS_NAO_ENCONTRADO
+			return 0
 		}
 	}
 	
-	MataMobSemIcone()
+	MataMobSemIcone(tipoAtaque)
 	{	
-		resultado := ProcuraImgSemIcone(resultadoBoss) ; Variavel global
-		if (resultado == 1) ; Encontrou e boss ta vivo
+		loop
 		{
-			AtivarBM3()
-			BaterBM3()
-			Sleep, 5000
-			resultadoBoss := 1
-			MataMobSemIcone()
-		}
-		else if (resultado == 0) ; Ainda não encontrou
-		{
-			SelecionarAlvo()
-			MataMobSemIcone()
-		}
-		else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
-		{
-			resultadoBoss := 0 ; Resetando valor da variavel global
-			voice.Speak("O alvo foi eliminado")
-			return
+			resultado := ProcuraMobSemIcone(resultadoBoss) ; Variavel global
+			if (resultado == 1) ; Encontrou e boss ta vivo
+			{
+				resultadoBoss := 1
+				voice.Speak("Boss encontrado")
+				Atacar(tipoAtaque)
+			}
+			else if (resultado == 0) ; Ainda não encontrou
+			{
+				voice.Speak("Boss não encontrado")
+				SelecionarAlvo()
+			}
+			else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
+			{
+				resultadoBoss := 0 ; Resetando valor da variavel global
+				voice.Speak("O alvo foi eliminado")
+				break
+			}
 		}
 	}
 	
-	ProcuraImgSemIcone(jaEncontrou)
+	ProcuraMobSemIcone(jaEncontrou)
 	{
-		ImageSearch, FoundX, FoundY, 753, 39, 790, 71, C:\Users\leona\Desktop\scripts\imagens\semiconemob.png
+		ImageSearch, FoundX, FoundY, 764, 48, 796, 78, % imagem.semIconeMob
 		if (ErrorLevel = 0)
 		{
 			return 1
@@ -134,7 +149,7 @@ BOSS_MORTO := 2
 		x := comandos.pegarItem	
 		Loop, 10
 		{
-			Send, %x%
+			Send, { %x% }
 			Sleep, 300
 		}
 	}
@@ -142,7 +157,7 @@ BOSS_MORTO := 2
 	SelecionarAlvo()
 	{
 		x := comandos.target
-		Send, %x%
+		SendInput, { %x% }
 		Sleep, 300
 	}
 	
@@ -160,11 +175,11 @@ BOSS_MORTO := 2
 		z := comandos.atkArea3
 		
 		Send, %x%
-		Sleep, 2300
+		Sleep, 3100
 		Send, %y%
-		Sleep, 2600
+		Sleep, 2300
 		Send, %z%
-		Sleep, 2500
+		Sleep, 2400
 		return
 	}
 	
@@ -179,18 +194,25 @@ BOSS_MORTO := 2
 		return
 	}
 	
+	AtivarBM2()
+	{
+		x := comandos.bm2Invoca
+		Send, %x%
+		Sleep, 1000
+	}
+	
 	AtivarBM3()
 	{
 		x := comandos.bm3Invoca
 		Send, %x%
-		Sleep, 1200
+		Sleep, 1000
 	}
 	
-	BaterBM3()
+	BaterBM()
 	{
-		x := comandos.bm3Ataca
+		x := comandos.bmAtaca
 		Send, %x%
-		Sleep, 1400
+		Sleep, 500
 	}
 	
 	RolaScrollBack()
@@ -212,7 +234,7 @@ BOSS_MORTO := 2
 	MoverDeslizar(x,y, tecla)
 	{
 		MouseMove, x, y
-		Sleep, 500
+		Sleep, 300
 		Send, %tecla%
 		Sleep, 300
 		return
@@ -221,9 +243,9 @@ BOSS_MORTO := 2
 	MoverMouseClica(x,y)
 	{
 		MouseMove, x, y
-		Sleep, 500
+		Sleep, 300
 		Click, x, y
-		Sleep, 500
+		Sleep, 300
 		return
 	}
 	
@@ -274,7 +296,7 @@ BOSS_MORTO := 2
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -285,7 +307,7 @@ BOSS_MORTO := 2
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -296,7 +318,7 @@ BOSS_MORTO := 2
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -307,7 +329,7 @@ BOSS_MORTO := 2
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -318,7 +340,7 @@ BOSS_MORTO := 2
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
-		Sleep, 1000
+		Sleep, 1300
 		return
 	}
 	
@@ -329,7 +351,7 @@ BOSS_MORTO := 2
 		x2 := 861
 		y2 := 784
 		color := 0xe8e8e8
-		MaxAttempts := 10
+		MaxAttempts := 3
 		
 		; Tenta encontrar a cor no intervalo de tentativas
 		if (BuscarPixel(x1, y1, x2, y2, color, MaxAttempts))
@@ -350,8 +372,8 @@ BOSS_MORTO := 2
 		x2 := 1155
 		y2 := 905
 		color := 0xFFFFFF
-		color2 := 0xFF0000
-		MaxAttempts := 10
+		
+		MaxAttempts := 3
 		
 		; Tenta encontrar a primeira cor no intervalo de tentativas
 		if (BuscarPixel(x1, y1, x2, y2, color, MaxAttempts))
@@ -361,8 +383,9 @@ BOSS_MORTO := 2
 		}
 		
 		; Se não encontrou a primeira cor, tenta a segunda cor
+		color := 0xFF0000
 		; A segunda cor não executará nenhuma ação se encontrada
-		if (BuscarPixel(x1, y1, x2, y2, color2, MaxAttempts, false)) ; mandou false, não vai clicar se achar
+		if (BuscarPixel(x1, y1, x2, y2, color, MaxAttempts, false)) ; mandou false, não vai clicar se achar
 		{
 			voice.Speak("Você não tem entradas desta DG ou já fez o máximo diário, encerrando macro")
 			ExitApp
@@ -407,3 +430,4 @@ BOSS_MORTO := 2
 		ordinais := ["primeira", "segunda", "terceira", "quarta", "quinta", "sexta", "sétima", "oitava", "nona", "décima"]
 		return ordinais[num]
 	}
+	
