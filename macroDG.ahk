@@ -12,16 +12,17 @@ comandos.bm2Invoca := "8"
 comandos.aura := "9"
 comandos.buff := "-"
 comandos.hp := "="
-comandos.pegarItem := "Space"
-comandos.target := "z"
+comandos.target := "Space"
+comandos.pegarItem := "z"
 
 ; Defina o diretório base usando o diretório do script
 baseDir := A_ScriptDir . "\imagens"
 
-global imagem := {}
-imagem.iconeBoss := baseDir . "\iconeboss.png"
-imagem.icone := baseDir . "\iconemob.png"
-imagem.semIconeMob := baseDir . "\semiconemob.png"
+global img := {}
+img.iconeBoss := baseDir . "\iconebosspc.png"
+img.iconeMob := baseDir . "\iconemob.png"
+img.semIconeMob := baseDir . "\semiconemob.png"
+img.iconeQuestDG := baseDir . "\iconequestdg.png"
 
 BOSS_ENCONTRADO := 1
 BOSS_NAO_ENCONTRADO := 0
@@ -156,73 +157,91 @@ global resultadoBoss
 	
 	DGSelo()
 	{
-		MoverDeslizar(453, 372, 1)
-		MoverMouseClica(793, 468)
-		MoverMouseClica(211, 737)
-		ArrastarTela(1089, 302, 531, 311)
-		MoverDeslizar(988, 144, 1)
-		MoverDeslizar(834, 149, 2)
-		MoverDeslizar(741, 191, 1)
-		MoverDeslizar(1053, 167, 2)
-		MoverDeslizar(1061, 165, 1)
-		MoverDeslizar(1319, 233, 2)
-		MoverDeslizar(1457, 384, 1)
-		ArrastarTela(1243, 404, 1661, 436)
-		MoverDeslizar(1360, 112, 2)
-		MoverDeslizar(1495, 154, 1)
-		MoverDeslizar(1629, 172, 2)
-		MoverDeslizar(1756, 222, 1)
-		MoverDeslizar(1811, 429, 2)
-		MoverDeslizar(1749, 332, 1)
-				
-		VerificaStatusAlvo( imagem.iconeBoss, 1)	
+		MoverDeslizar(415, 318, 1)
+		MoverMouseClica(709, 477)
+		MoverMouseClica(265, 751)
+		ArrastarTela(1060, 314, 552, 330)
+		MoverDeslizar(783, 80, 1)
+		MoverDeslizar(795, 120, 2)
+		MoverDeslizar(556, 220, 1)
+		MoverDeslizar(774, 152, 2)
+		MoverDeslizar(896, 137, 1)
+		MoverDeslizar(1089, 163, 2)
+		MoverDeslizar(1310, 285, 1)
+		ArrastarTela(1338, 483, 1622, 480)
+		MoverDeslizar(1431, 247, 2)
+		MoverDeslizar(1519, 298, 1)
+		ArrastarTela(1497, 334, 1669, 360)
+		MoverDeslizar(1306, 138, 2)
+		MoverDeslizar(1313, 129, 1)
+		MoverDeslizar(1537, 240, 2)
+		MoverDeslizar(1517, 210, 1)
+		MoverDeslizar(1325, 142, 2)
 		
-		MoverDeslizar(1264, 245, 1)
-		MoverMouseClica(1094, 432)
-		MoverMouseClica(129, 754)
-		MoverMouseClica(118, 756)
-		MoverMouseClica(154, 752)
-		MoverMouseClica(172, 749)
-		MoverMouseClica(181, 725)
-		MoverMouseClica(202, 730)
-		MoverMouseClica(221, 731)
-		MoverMouseClica(231, 744)
-		MoverMouseClica(206, 746)
-		MoverMouseClica(212, 740)
-		MoverMouseClica(211, 741)
-		MoverMouseClica(208, 714)
-		MoverDeslizar(808, 158, 1)
-		MoverDeslizar(662, 168, 2)
-		MoverDeslizar(664, 168, 1)
-		MoverDeslizar(355, 488, 2)
-		MoverDeslizar(235, 746, 1)
-		MoverDeslizar(198, 867, 2)
-		MoverDeslizar(172, 914, 1)
-		MoverDeslizar(457, 428, 2)
-		MoverDeslizar(743, 210, 1)
-		MoverDeslizar(1527, 253, 2)
-		MoverDeslizar(1543, 230, 1)
-		MoverDeslizar(1555, 232, 2)
-		MoverDeslizar(1555, 232, 1)
-		MoverDeslizar(1554, 479, 2)
-		MoverDeslizar(1430, 332, 1)
-		MoverDeslizar(646, 199, 2)
-		MoverDeslizar(769, 121, 1)
-		MoverDeslizar(767, 155, 2)
-		MoverDeslizar(680, 218, 1)
-		MoverDeslizar(597, 820, 2)
-		MoverDeslizar(966, 913, 1)
-		MoverDeslizar(977, 925, 2)
-		MoverDeslizar(923, 913, 1)
-		MoverDeslizar(795, 916, 2)
-		MoverDeslizar(581, 809, 1)
-		MoverDeslizar(690, 265, 2)
-		MoverDeslizar(711, 193, 1)
-		MoverDeslizar(816, 207, 2)
-		MoverDeslizar(1025, 231, 1)
+		VerificaStatusAlvo( img.iconeBoss, 1)	
+		MoverDeslizar(1068, 268, 1)
 		
-		VerificaStatusAlvo( imagem.iconeBoss, 3)
-		VerificaStatusAlvo( imagem.iconeBoss, 3)
+		MoverMouseClica(969, 402)
+		
+		ProcuraObstaculo(img.iconeQuestDG, 20, 733, 59, 768)
+		
+		MoverMouseClica(263, 749)
+		MoverMouseClica(245, 756)
+		MoverMouseClica(212, 756)
+		MoverMouseClica(171, 753)
+		MoverMouseClica(148, 750)
+		MoverMouseClica(133, 754)
+		MoverMouseClica(147, 753)
+		MoverMouseClica(176, 747)
+		MoverMouseClica(204, 741)
+		MoverMouseClica(177, 742)
+		MoverMouseClica(177, 740)
+		MoverMouseClica(161, 752)
+		MoverDeslizar(610, 188, 1)
+		MoverDeslizar(333, 348, 2)
+		MoverDeslizar(260, 412, 1)
+		MoverDeslizar(266, 558, 2)
+		MoverDeslizar(272, 942, 1)
+		MoverDeslizar(592, 1087, 2)
+		MoverDeslizar(775, 1087, 1)
+		MoverDeslizar(951, 934, 1)
+		MoverDeslizar(271, 795, 2)
+		MoverDeslizar(394, 477, 1)
+		MoverDeslizar(896, 197, 2)
+		MoverDeslizar(1119, 87, 1)
+		MoverDeslizar(1275, 119, 2)
+		MoverDeslizar(1269, 132, 1)
+		MoverDeslizar(1514, 227, 2)
+		MoverDeslizar(1411, 200, 1)
+		MoverDeslizar(552, 195, 2)
+		MoverDeslizar(569, 161, 1)
+		MoverDeslizar(559, 187, 2)
+		MoverDeslizar(544, 237, 1)
+		MoverDeslizar(491, 631, 2)
+		MoverDeslizar(800, 888, 1)
+		MoverDeslizar(1352, 1029, 2)
+		MoverDeslizar(1360, 1032, 1)
+		MoverDeslizar(1007, 1058, 2)
+		MoverDeslizar(557, 969, 1)
+		MoverDeslizar(382, 471, 2)
+		MoverDeslizar(441, 231, 1)
+		MoverDeslizar(569, 237, 2)
+		MoverDeslizar(749, 168, 1)
+		MoverDeslizar(932, 416, 2)
+		
+		VerificaStatusAlvo( img.semIconeMob, 1)
+		VerificaStatusAlvo( img.semIconeMob, 1)
+		
+		MoverDeslizar(777, 192, 1)
+		MoverDeslizar(804, 201, 2)
+		
+		VerificaStatusAlvo( img.semIconeMob, 1)
+		
+		MoverMouseClica(888, 271)
+		MoverMouseClica(92, 762)
+		MoverDeslizar(812, 122, 1)
+		
+		VerificaStatusAlvo( img.iconeBoss, 1)
 		
 	}
 	
@@ -249,18 +268,24 @@ global resultadoBoss
 	
 	VerificaStatusAlvo(imagemAlvo, tipoAtaque)
 	{
+		AttemptCount := 0
 		loop
 		{
 			resultado := ProcuraAlvo(imagemAlvo, resultadoBoss)
+			
 			if (resultado == 1)  ; Encontrou e alvo está vivo
 			{
 				resultadoBoss := 1
-				voice.Speak("Alvo encontrado")
+				if(AttemptCount < 1)
+				{
+					AttemptCount++
+					voice.Speak("Alvo encontrado")
+				}
 				Atacar(tipoAtaque)
 			}
 			else if (resultado == 0)  ; Ainda não encontrou
 			{
-				voice.Speak("Alvo não encontrado")
+				voice.Speak("Procurando alvo")
 				SelecionarAlvo()
 			}
 			else if (resultado == 2)  ; Já encontrou, mas agora não encontrou (matou)
@@ -274,7 +299,7 @@ global resultadoBoss
 
 	ProcuraAlvo(imagemAlvo, jaEncontrou)
 	{
-		ImageSearch, FoundX, FoundY, 764, 48, 796, 78, % imagemAlvo
+		ImageSearch, FoundX, FoundY, 761, 40, 793, 74, % imagemAlvo
 		if (ErrorLevel = 0)
 		{
 			return 1
@@ -286,6 +311,29 @@ global resultadoBoss
 				return 2
 			}
 			return 0
+		}
+	}
+	
+	ProcuraObstaculo(imgObstaculo, x1, y1, x2, y2)
+	{
+		AttemptCount := 0
+		loop
+		{
+			ImageSearch, FoundX, FoundY, x1, y1, x2, y2, % imgObstaculo
+			if (ErrorLevel = 0)
+			{
+				voice.Speak("Obstaculo encontrado")
+				break
+			}
+			
+			AttemptCount++
+			if (AttemptCount >= 3)
+			{
+				voice.Speak("Obstaculo não encontrado") ; Não encontrado após o número máximo de tentativas
+				ExitApp  
+			}
+			
+			Sleep, 500  ; Aguarda antes de tentar novamente
 		}
 	}
 	
@@ -469,8 +517,8 @@ global resultadoBoss
 	
 	ClicaEntradaSelo()
 	{	
-		x := 1025
-		y := 453
+		x := 995
+		y := 400
 		MouseMove, x, y
 		Sleep, 300
 		Click, x, y
@@ -512,10 +560,10 @@ global resultadoBoss
 	
 	ProcuraBtnEntrar()
 	{
-		x1 := 1055
-		y1 := 876
-		x2 := 1155
-		y2 := 905
+		x1 := 1085
+		y1 := 870
+		x2 := 1105
+		y2 := 890
 		color := 0xFFFFFF
 		
 		MaxAttempts := 3
@@ -551,9 +599,8 @@ global resultadoBoss
 			{
 				if (performAction)
 				{
-					Sleep, 200
 					MouseMove, %posX%, %posY%
-					Sleep, 500  ; Aguarda um pouco para garantir que o movimento foi registrado
+					Sleep, 300  ; Aguarda um pouco para garantir que o movimento foi registrado
 					Click, %posX%, %posY%
 					Sleep, 200
 				}
@@ -566,7 +613,7 @@ global resultadoBoss
 				return false  ; Não encontrado após o número máximo de tentativas
 			}
 			
-			Sleep, 1000  ; Aguarda antes de tentar novamente
+			Sleep, 500  ; Aguarda antes de tentar novamente
 		}
 	}
 	

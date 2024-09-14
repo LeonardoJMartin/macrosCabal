@@ -1,0 +1,2 @@
+MoverDeslizar(777, 192, 1)
+MoverDeslizar(804, 201, 2)

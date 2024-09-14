@@ -19,7 +19,7 @@ comandos.target := "z"
 baseDir := A_ScriptDir . "\imagens"
 
 global imagem := {}
-imagem.iconeBoss := baseDir . "\iconeboss.png"
+imagem.iconeBoss := baseDir . "\iconebosspc.png"
 imagem.iconeMob := baseDir . "\iconemob.png"
 imagem.semIconeMob := baseDir . "\iconemobsemicone.png"
 
@@ -30,8 +30,7 @@ imagem.semIconeMob := baseDir . "\iconemobsemicone.png"
 		WinActivate, ahk_exe cabalmain.exe
 		CoordMode, Pixel, Window
 		CoordMode, Mouse, Window
-		MataMobSemIcone(3)
-		MataMobSemIcone(3)
+		VerificaStatusAlvo(imagem.iconeBoss, 1)
 		ExitApp 
 	}
 	else
@@ -60,83 +59,41 @@ imagem.semIconeMob := baseDir . "\iconemobsemicone.png"
 		}
 	}
 	
-	MataBoss(tipoAtaque)
-	{	
+	VerificaStatusAlvo(imagemAlvo, tipoAtaque)
+	{
 		loop
 		{
-			resultado := ProcuraBossIcone(resultadoBoss) ; Variavel global
-			if (resultado == 1) ; Encontrou e boss ta vivo
+			resultado := ProcuraAlvo(imagemAlvo, resultadoBoss)
+			if (resultado == 1)  ; Encontrou e alvo está vivo
 			{
 				resultadoBoss := 1
-				voice.Speak("Boss encontrado")
+				voice.Speak("Alvo encontrado")
 				Atacar(tipoAtaque)
 			}
-			else if (resultado == 0) ; Ainda não encontrou
+			else if (resultado == 0)  ; Ainda não encontrou
 			{
-				voice.Speak("Boss não encontrado")
+				voice.Speak("Alvo não encontrado")
 				SelecionarAlvo()
 			}
-			else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
+			else if (resultado == 2)  ; Já encontrou, mas agora não encontrou (matou)
 			{
-				resultadoBoss := 0 ; Resetando valor da variavel global
+				resultadoBoss := 0  ; Resetando valor da variável global
 				voice.Speak("O alvo foi eliminado")
 				break
 			}
 		}
 	}
-	
-	ProcuraBossIcone(jaEncontrou)
+
+	ProcuraAlvo(imagemAlvo, jaEncontrou)
 	{
-		ImageSearch, FoundX, FoundY, 764, 48, 796, 78, % imagem.iconeBoss
+		ImageSearch, FoundX, FoundY, 761, 40, 793, 74, % imagemAlvo
 		if (ErrorLevel = 0)
 		{
 			return 1
 		}
 		else if (ErrorLevel = 1)
 		{
-			if (jaEncontrou == 1) ; Já encontrou antes, mas agora não
-			{
-				return 2
-			}
-			return 0
-		}
-	}
-	
-	MataMobSemIcone(tipoAtaque)
-	{	
-		loop
-		{
-			resultado := ProcuraMobSemIcone(resultadoBoss) ; Variavel global
-			if (resultado == 1) ; Encontrou e boss ta vivo
-			{
-				resultadoBoss := 1
-				voice.Speak("Boss encontrado")
-				Atacar(tipoAtaque)
-			}
-			else if (resultado == 0) ; Ainda não encontrou
-			{
-				voice.Speak("Boss não encontrado")
-				SelecionarAlvo()
-			}
-			else if (resultado == 2) ; Já encontrou, mas agora não encontrou (matou)
-			{
-				resultadoBoss := 0 ; Resetando valor da variavel global
-				voice.Speak("O alvo foi eliminado")
-				break
-			}
-		}
-	}
-	
-	ProcuraMobSemIcone(jaEncontrou)
-	{
-		ImageSearch, FoundX, FoundY, 764, 48, 796, 78, % imagem.semIconeMob
-		if (ErrorLevel = 0)
-		{
-			return 1
-		}
-		else if (ErrorLevel = 1)
-		{
-			if (jaEncontrou == 1) ; Já encontrou antes, mas agora não
+			if (jaEncontrou == 1)  ; Já encontrou antes, mas agora não
 			{
 				return 2
 			}

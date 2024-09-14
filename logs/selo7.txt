@@ -1,0 +1,5 @@
+ArrastarTela(1105, 325, 1395, 324)
+MoverDeslizar(1056, 94, 1)
+MoverDeslizar(1004, 91, 2)
+MoverDeslizar(1176, 161, 1)
+MoverDeslizar(1518, 622, 2)

@@ -1,0 +1,4 @@
+MoverMouseClica(1080, 278)
+MoverMouseClica(187, 760)
+MoverDeslizar(1254, 171, 1)
+MoverDeslizar(1006, 241, 2)
